@@ -10,7 +10,7 @@ They should not be confused with Schedulers, which are for performing an action 
 
 Timers are typically low resolution (Compared to Schedulers), with maximum frequency currently being approximately every 10ms
 */
-#include "timers.h"
+#include "timers_speed.h"
 #include "globals.h"
 #include "sensors.h"
 #include "scheduler.h"

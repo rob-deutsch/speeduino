@@ -16,8 +16,8 @@ We're after a 1ms interval so we'll need 131 intervals to reach this ( 1ms / 0.0
 Hence we will preload the timer with 131 cycles to leave 125 until overflow (1ms).
 
 */
-#ifndef TIMERS_H
-#define TIMERS_H
+#ifndef TIMERS_SPEED_H
+#define TIMERS_SPEED_H
 
 volatile bool tachoAlt = false;
 #define TACHO_PULSE_HIGH() *tach_pin_port |= (tach_pin_mask)

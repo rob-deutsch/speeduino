@@ -6,7 +6,7 @@
 #include "storage.h"
 #include "updates.h"
 #include "speeduino.h"
-#include "timers.h"
+#include "timers_speed.h"
 #include "cancomms.h"
 #include "utilities.h"
 #include "scheduledIO.h"
@@ -326,7 +326,7 @@ void initialiseAll()
     if ( configPage6.useExtBaro != 0 )
     {
       readBaro();
-      //EEPROM.update(EEPROM_LAST_BARO, currentStatus.baro);
+      //EEPROM.write(EEPROM_LAST_BARO, currentStatus.baro);
       storeLastBaro(currentStatus.baro);
     }
     else
@@ -339,7 +339,7 @@ void initialiseAll()
       if ((currentStatus.MAP >= BARO_MIN) && (currentStatus.MAP <= BARO_MAX)) //Check if engine isn't running
       {
         currentStatus.baro = currentStatus.MAP;
-        //EEPROM.update(EEPROM_LAST_BARO, currentStatus.baro);
+        //EEPROM.write(EEPROM_LAST_BARO, currentStatus.baro);
         storeLastBaro(currentStatus.baro);
       }
       else

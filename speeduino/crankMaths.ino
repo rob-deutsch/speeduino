@@ -1,7 +1,7 @@
 #include "globals.h"
 #include "crankMaths.h"
 #include "decoders.h"
-#include "timers.h"
+#include "timers_speed.h"
 
 /*
 * Converts a crank angle into a time from or since that angle occurred.

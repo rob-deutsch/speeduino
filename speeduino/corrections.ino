@@ -26,7 +26,7 @@ There are 2 top level functions that call more detailed corrections for Fuel and
 #include "globals.h"
 #include "corrections.h"
 #include "speeduino.h"
-#include "timers.h"
+#include "timers_speed.h"
 #include "maths.h"
 #include "sensors.h"
 #include "src/PID_v1/PID_v1.h"

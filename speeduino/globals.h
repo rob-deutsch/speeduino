@@ -70,6 +70,12 @@
   #define INJ_CHANNELS 8
   #define IGN_CHANNELS 8
 
+#elif defined(ESP32)
+  #define CORE_ESP32
+  #define BOARD_H "board_esp32.h"
+  #define INJ_CHANNELS 4
+  #define IGN_CHANNELS 4
+
 #elif defined(STM32_MCU_SERIES) || defined(ARDUINO_ARCH_STM32) || defined(STM32)
   #define CORE_STM32
   #define BOARD_MAX_ADC_PINS  NUM_ANALOG_INPUTS-1 //Number of analog pins from core.

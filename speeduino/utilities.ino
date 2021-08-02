@@ -7,7 +7,7 @@
  * Custom Programmable I/O.
  * The config related to Programmable I/O is found on configPage13 (of type @ref config13).
  */
-#include <avr/pgmspace.h>
+#include <pgmspace.h>
 #include "globals.h"
 #include "utilities.h"
 #include "decoders.h"

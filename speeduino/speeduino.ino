@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "cancomms.h"
 #include "maths.h"
 #include "corrections.h"
-#include "timers.h"
+#include "timers_speed.h"
 #include "decoders.h"
 #include "idle.h"
 #include "auxiliaries.h"

@@ -73,7 +73,7 @@ void doUpdates()
       int endMem = EEPROM_CONFIG10_END - x;
       int startMem = endMem - 128; //
       byte currentVal = EEPROM.read(startMem);
-      EEPROM.update(endMem, currentVal);
+      EEPROM.write(endMem, currentVal);
     }
     //The remaining data only has to move back 64 bytes
     for(int x=0; x < 352; x++)
@@ -81,7 +81,7 @@ void doUpdates()
       int endMem = EEPROM_CONFIG10_END - 1152 - x;
       int startMem = endMem - 64; //
       byte currentVal = EEPROM.read(startMem);
-      EEPROM.update(endMem, currentVal);
+      EEPROM.write(endMem, currentVal);
     }
 
     EEPROM.write(EEPROM_DATA_VERSION, 6);
@@ -96,7 +96,7 @@ void doUpdates()
       int endMem = EEPROM_CONFIG10_END - x;
       int startMem = endMem - 82; //
       byte currentVal = EEPROM.read(startMem);
-      EEPROM.update(endMem, currentVal);
+      EEPROM.write(endMem, currentVal);
     }
 
     EEPROM.write(EEPROM_DATA_VERSION, 7);
@@ -454,7 +454,7 @@ void doUpdates()
     //Fix for wrong placed page 13
     for(int x=EEPROM_CONFIG14_END; x>=EEPROM_CONFIG13_START; x--)
     {
-      EEPROM.update(x, EEPROM.read(x-112));
+      EEPROM.write(x, EEPROM.read(x-112));
     }
 
     configPage6.iacPWMrun = false; // just in case. This should be false anyways, but sill.

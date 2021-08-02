@@ -471,7 +471,7 @@ void writeCalibration()
     y = EEPROM_CALIBRATION_O2 + (x * 2);
     EEPROM.put(y, o2Calibration_bins[x]);
     y = EEPROM_CALIBRATION_O2 + 64 + x; 
-    EEPROM.update(y, o2Calibration_values[x]);
+    EEPROM.write(y, o2Calibration_values[x]);
   }
 
 }
@@ -494,10 +494,10 @@ void storePageCRC32(byte pageNo, uint32_t crc32_val)
   byte one = ((crc32_val >> 24) & 0xFF);
 
   //Write the 4 bytes into the eeprom memory.
-  EEPROM.update(address, four);
-  EEPROM.update(address + 1, three);
-  EEPROM.update(address + 2, two);
-  EEPROM.update(address + 3, one);
+  EEPROM.write(address, four);
+  EEPROM.write(address + 1, three);
+  EEPROM.write(address + 2, two);
+  EEPROM.write(address + 3, one);
 }
 
 /** Retrieves and returns the 4 byte CRC32 checksum for a given page from EEPROM.
@@ -523,10 +523,10 @@ uint32_t readPageCRC32(byte pageNo)
 /// Read last stored barometer reading from EEPROM.
 byte readLastBaro() { return EEPROM.read(EEPROM_LAST_BARO); }
 /// Write last acquired arometer reading to EEPROM.
-void storeLastBaro(byte newValue) { EEPROM.update(EEPROM_LAST_BARO, newValue); }
+void storeLastBaro(byte newValue) { EEPROM.write(EEPROM_LAST_BARO, newValue); }
 /// Store calibration value byte into EEPROM (offset "location").
-void storeCalibrationValue(uint16_t location, byte value) { EEPROM.update(location, value); } //This is essentially just an abstraction for EEPROM.update()
+void storeCalibrationValue(uint16_t location, byte value) { EEPROM.write(location, value); } //This is essentially just an abstraction for EEPROM.write()
 /// Read EEPROM current data format version (from offset EEPROM_DATA_VERSION).
 byte readEEPROMVersion() { return EEPROM.read(EEPROM_DATA_VERSION); }
 /// Store EEPROM current data format version (to offset EEPROM_DATA_VERSION).
-void storeEEPROMVersion(byte newVersion) { EEPROM.update(EEPROM_DATA_VERSION, newVersion); }
+void storeEEPROMVersion(byte newVersion) { EEPROM.write(EEPROM_DATA_VERSION, newVersion); }
