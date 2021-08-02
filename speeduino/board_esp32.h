@@ -2,7 +2,8 @@
 #define ESP32_H
 #if defined(CORE_ESP32)
 
-#include <soc/ledc_reg.h>
+#include "driver/ledc.h"
+#include <soc/ledc_struct.h>
 
 
 /*
@@ -41,25 +42,25 @@
 * Schedules
 */
   
-  #define FUEL1_COUNTER (*(unsigned int *)LEDC_HSTIMER0_VALUE_REG)
-  #define FUEL2_COUNTER (*(unsigned int *)LEDC_HSTIMER0_VALUE_REG)
-  #define FUEL3_COUNTER (*(unsigned int *)LEDC_HSTIMER0_VALUE_REG)
-  #define FUEL4_COUNTER (*(unsigned int *)LEDC_HSTIMER0_VALUE_REG)
+  #define FUEL1_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define FUEL2_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define FUEL3_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define FUEL4_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
 
-  #define IGN1_COUNTER  (*(unsigned int *)LEDC_HSTIMER1_VALUE_REG)
-  #define IGN2_COUNTER  (*(unsigned int *)LEDC_HSTIMER1_VALUE_REG)
-  #define IGN3_COUNTER  (*(unsigned int *)LEDC_HSTIMER1_VALUE_REG)
-  #define IGN4_COUNTER  (*(unsigned int *)LEDC_HSTIMER1_VALUE_REG)
+  #define IGN1_COUNTER  LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define IGN2_COUNTER  LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define IGN3_COUNTER  LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define IGN4_COUNTER  LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
 
-  #define FUEL1_COMPARE (*(unsigned int *)LEDC_HSCH0_DUTY_REG)
-  #define FUEL2_COMPARE (*(unsigned int *)LEDC_HSCH1_DUTY_REG)
-  #define FUEL3_COMPARE (*(unsigned int *)LEDC_HSCH2_DUTY_REG)
-  #define FUEL4_COMPARE (*(unsigned int *)LEDC_HSCH3_DUTY_REG)
+  #define FUEL1_COMPARE LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_0].duty.duty
+  #define FUEL2_COMPARE LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_1].duty.duty
+  #define FUEL3_COMPARE LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_2].duty.duty
+  #define FUEL4_COMPARE LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_3].duty.duty
 
-  #define IGN1_COMPARE  (*(unsigned int *)LEDC_HSCH4_DUTY_REG)
-  #define IGN2_COMPARE  (*(unsigned int *)LEDC_HSCH5_DUTY_REG)
-  #define IGN3_COMPARE  (*(unsigned int *)LEDC_HSCH6_DUTY_REG)
-  #define IGN4_COMPARE  (*(unsigned int *)LEDC_HSCH7_DUTY_REG)
+  #define IGN1_COMPARE  LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_4].duty.duty
+  #define IGN2_COMPARE  LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_5].duty.duty
+  #define IGN3_COMPARE  LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_6].duty.duty
+  #define IGN4_COMPARE  LEDC.channel_group[LEDC_HIGH_SPEED_MODE].channel[LEDC_CHANNEL_7].duty.duty
 
   #define FUEL1_TIMER_ENABLE()
   #define FUEL2_TIMER_ENABLE()
@@ -96,18 +97,18 @@
   #define ENABLE_VVT_TIMER()    
   #define DISABLE_VVT_TIMER()   
 
-  #define BOOST_TIMER_COMPARE   (*(unsigned int *)LEDC_LSCH0_DUTY_REG)
-  #define BOOST_TIMER_COUNTER   (*(unsigned int *)LEDC_LSTIMER0_VALUE_REG)
-  #define VVT_TIMER_COMPARE     (*(unsigned int *)LEDC_LSCH1_DUTY_REG)
-  #define VVT_TIMER_COUNTER     (*(unsigned int *)LEDC_LSTIMER0_VALUE_REG)
+  #define BOOST_TIMER_COMPARE   LEDC.channel_group[LEDC_LOW_SPEED_MODE].channel[LEDC_CHANNEL_0].duty.duty
+  #define BOOST_TIMER_COUNTER   LEDC.timer_group[LEDC_LOW_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define VVT_TIMER_COMPARE     LEDC.channel_group[LEDC_LOW_SPEED_MODE].channel[LEDC_CHANNEL_1].duty.duty
+  #define VVT_TIMER_COUNTER     LEDC.timer_group[LEDC_LOW_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
 
 /*
 ***********************************************************************************************************
 * Idle
 */
   //Same as above, but for the timer controlling PWM idle
-  #define IDLE_COUNTER          (*(unsigned int *)LEDC_LSTIMER0_VALUE_REG)
-  #define IDLE_COMPARE          (*(unsigned int *)LEDC_LSCH2_DUTY_REG)
+  #define IDLE_COUNTER          LEDC.timer_group[LEDC_LOW_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
+  #define IDLE_COMPARE          LEDC.channel_group[LEDC_LOW_SPEED_MODE].channel[LEDC_CHANNEL_2].duty.duty
 
   #define IDLE_TIMER_ENABLE()
   #define IDLE_TIMER_DISABLE()
