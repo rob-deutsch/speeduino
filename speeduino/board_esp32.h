@@ -24,7 +24,7 @@
   #define COMPARE_TYPE uint32_t
   #define pinIsReserved(pin)  ( ((pin) == 0) ) //Forbiden pins like USB
 
-  #if !defined (A0)
+    #if !defined (A0)
     #define A0  0
     #define A1  1
     #define A2  2
