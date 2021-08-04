@@ -75,6 +75,7 @@
   #define BOARD_H "board_esp32.h"
   #define INJ_CHANNELS 4
   #define IGN_CHANNELS 4
+  #define BOARD_MAX_ADC_PINS 16
 
 #elif defined(STM32_MCU_SERIES) || defined(ARDUINO_ARCH_STM32) || defined(STM32)
   #define CORE_STM32

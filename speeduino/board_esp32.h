@@ -12,8 +12,8 @@
 */
   #define PORT_TYPE uint32_t //Size of the port variables (Eg inj1_pin_port). Most systems use a byte, but SAMD21 and possibly others are a 32-bit unsigned int
   #define PINMASK_TYPE uint32_t
-  #define BOARD_MAX_IO_PINS  52 //digital pins + analog channels + 1
-  #define BOARD_MAX_DIGITAL_PINS 52 //Pretty sure this isn't right
+  #define BOARD_MAX_IO_PINS  40 //digital pins + analog channels + 1
+  #define BOARD_MAX_DIGITAL_PINS 40 //Pretty sure this isn't right
   #define EEPROM_LIB_H <EEPROM.h> //The name of the file that provides the EEPROM class
   #define micros_safe() micros() //timer5 method is not used on anything but AVR, the micros_safe() macro is simply an alias for the normal micros()
   void initBoard();
@@ -22,19 +22,25 @@
   void jumpToBootloader();
 
   #define COMPARE_TYPE uint32_t
-  #define pinIsReserved(pin)  ( ((pin) == 0) ) //Forbiden pins like USB
+  #define pinIsReserved(pin)  ( (((pin) >= 1) && ((pin) <= 3)) || (((pin) >= 6) && (pin <=12)) ) //Forbiden pins like USB
 
-    #if !defined (A0)
-    #define A0  0
-    #define A1  1
-    #define A2  2
-    #define A3  3
-    #define A4  4
-    #define A5  5
-    #define A6  6
-    #define A7  7
-    #define A8  8
-    #define A9  9
+  #if !defined (A0)
+    #define A0  36
+    #define A1  39
+    #define A2  32
+    #define A3  33
+    #define A4  34
+    #define A5  35
+    #define A6   4
+    #define A7   0
+    #define A8   2
+    #define A9  15
+    #define A10 13
+    #define A11 12
+    #define A12 14
+    #define A13 27
+    #define A14 25
+    #define A15 26
   #endif
 
 /*
