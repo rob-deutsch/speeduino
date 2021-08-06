@@ -76,6 +76,8 @@ void initialiseAll()
     configPage9.intcan_available = 1;   // device has internal canbus
     //STM32 can not currently enabled
     #endif
+
+    EEPROM.begin(4096);
     
     loadConfig();
     doUpdates(); //Check if any data items need updating (Occurs with firmware updates)
@@ -270,7 +272,7 @@ void initialiseAll()
         setPinMapping(3); //Force board to v0.4
       #endif
     }
-    else { setPinMapping(configPage2.pinMapping); }
+    else { setPinMapping(32); }
 
     /* Note: This must come after the call to setPinMapping() or else pins 29 and 30 will become unusable as outputs.
      * Workaround for: https://github.com/tonton81/FlexCAN_T4/issues/14 */

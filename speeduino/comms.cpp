@@ -569,7 +569,10 @@ void command()
       { 
         while( (Serial.available() > 0) && (chunkComplete < chunkSize) )
         {
-          setPageValue(currentPage, (valueOffset + chunkComplete), Serial.read());
+          int toWrite = Serial.read();
+          // This SHOULDNT be required after checking Serial.available(), but there is a quirk on ESP32 that necessitates this check
+          if (toWrite == -1) return;
+          setPageValue(currentPage, (valueOffset + chunkComplete), 0xFF & toWrite);
           chunkComplete++;
         }
         if(chunkComplete >= chunkSize) { cmdPending = false; chunkPending = false; }

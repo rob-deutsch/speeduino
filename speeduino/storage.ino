@@ -284,6 +284,7 @@ void writeConfig(byte tableNum)
     default:
       break;
   }
+  EEPROM.commit();
 }
 /** Reset all configPage* structs (2,4,6,9,10,13) and write them full of null-bytes.
  */
