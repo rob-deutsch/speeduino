@@ -41,6 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "engineProtection.h"
 #include "secondaryTables.h"
 #include BOARD_H //Note that this is not a real file, it is defined in globals.h. 
+#include "rom/uart.h"
 
 int ignition1StartAngle = 0;
 int ignition2StartAngle = 0;
@@ -84,6 +85,8 @@ uint16_t staged_req_fuel_mult_sec = 0;
 #ifndef UNIT_TEST // Scope guard for unit testing
 void setup()
 {
+  Serial1.begin(115200);
+  uart_tx_switch(1); // Send standard error info elsewhere
   initialisationComplete = false; //Tracks whether the initialiseAll() function has run completely
   initialiseAll();
 }
