@@ -6,7 +6,17 @@
 #include <soc/ledc_struct.h>
 
 #if defined(NO_GLOBAL_SERIAL)
-extern HardwareSerial Serial;
+extern HardwareSerial Serial0;
+
+#include "BluetoothSerial.h"
+class SpeeduinoBTSerial: public BluetoothSerial
+{
+  public:
+    bool begin(unsigned long baud);
+    int availableForWrite(void);
+  private:
+};
+extern SpeeduinoBTSerial Serial;
 #endif
 
 /*
