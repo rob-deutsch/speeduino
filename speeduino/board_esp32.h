@@ -5,6 +5,9 @@
 #include "driver/ledc.h"
 #include <soc/ledc_struct.h>
 
+#if defined(NO_GLOBAL_SERIAL)
+extern HardwareSerial Serial;
+#endif
 
 /*
 ***********************************************************************************************************
