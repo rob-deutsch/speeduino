@@ -85,8 +85,6 @@ uint16_t staged_req_fuel_mult_sec = 0;
 #ifndef UNIT_TEST // Scope guard for unit testing
 void setup()
 {
-  Serial1.begin(115200);
-  uart_tx_switch(1); // Send standard error info elsewhere
   initialisationComplete = false; //Tracks whether the initialiseAll() function has run completely
   initialiseAll();
 }
