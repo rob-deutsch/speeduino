@@ -1,6 +1,7 @@
 #if defined(CORE_ESP32)
 #include "globals.h"
 #include "board_esp32.h"
+#include "esp_bt_device.h"
 #include <Ticker.h>
 
 extern void oneMSInterval();
@@ -11,7 +12,15 @@ SpeeduinoBTSerial Serial;
 
 bool SpeeduinoBTSerial::begin(unsigned long baud)
 {
-    return BluetoothSerial::begin("SHOOP");
+    char name[] = "Speedy_000000";
+    if (BluetoothSerial::begin("Speeduino_Loading")) {
+        const uint8_t *addr = esp_bt_dev_get_address();
+        sprintf(&name[7], "%02X", (uint8_t)addr[3]);
+        sprintf(&(name[9]), "%02X", (uint8_t)addr[4]);
+        sprintf(&(name[11]), "%02X", (uint8_t)addr[5]);
+        return esp_bt_dev_set_device_name(name);
+    }
+    return false;
 }
 int SpeeduinoBTSerial::availableForWrite(void)
 {
