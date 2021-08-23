@@ -436,12 +436,7 @@ void initialiseAll()
     currentLoopTime = micros_safe();
     mainLoopCount = 0;
 
-    if (configPage2.divider != 0) {
-      currentStatus.nSquirts = configPage2.nCylinders / configPage2.divider; //The number of squirts being requested. This is manaully overriden below for sequential setups (Due to TS req_fuel calc limitations)  
-    } else {
-      // Replicates Arduino SDK's return of maximum value
-      currentStatus.nSquirts = 0xFF;
-    }
+    currentStatus.nSquirts = configPage2.nCylinders / configPage2.divider; //The number of squirts being requested. This is manaully overriden below for sequential setups (Due to TS req_fuel calc limitations)
     if(currentStatus.nSquirts == 0) { currentStatus.nSquirts = 1; } //Safety check. Should never happen as TS will give an error, but leave incase tune is manually altered etc. 
 
     //Calculate the number of degrees between cylinders
@@ -467,7 +462,6 @@ void initialiseAll()
     ignition7EndAngle = 0;
     ignition8EndAngle = 0;
 
-    // currentStatus.nSquirts will always be >= 0 (by code above)
     if(configPage2.strokes == FOUR_STROKE) { CRANK_ANGLE_MAX_INJ = 720 / currentStatus.nSquirts; }
     else { CRANK_ANGLE_MAX_INJ = 360 / currentStatus.nSquirts; }
     
