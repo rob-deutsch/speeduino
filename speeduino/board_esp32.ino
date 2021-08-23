@@ -3,6 +3,7 @@
 #include "board_esp32.h"
 #include "esp_bt_device.h"
 #include <Ticker.h>
+#include <freertos/xtensa_api.h>
 
 extern void oneMSInterval();
 
@@ -29,9 +30,11 @@ int SpeeduinoBTSerial::availableForWrite(void)
 #endif
 
 Ticker oneMSTimer;
-
+void h(XtExcFrame*);
 void initBoard()
 {
+    xt_set_exception_handler(EXCCAUSE_DIVIDE_BY_ZERO, h);
+
     // Useful for diagnostics
     Serial0.begin(115200);
     Serial0.println("Began diagnostics port");
@@ -69,5 +72,71 @@ uint16_t freeRam()
 
 void doSystemReset() { return; }
 void jumpToBootloader() { return; }
+
+void h(XtExcFrame* f) {
+  // Set the return value to UINT_MAX as per
+  // page 471 of Xtensa® Instruction Set Architecture Reference Manual
+  // https://0x04.net/~mwk/doc/xtensa.pdf
+  long address_of_rs_byte = f->pc + 1;
+  long address_of_rs_word = address_of_rs_byte & 0xFFFFFFFC;
+  uint32_t rs_word = *(uint32_t*)address_of_rs_word;
+  uint8_t rs = 0xFF & (rs_word >> (8*(address_of_rs_byte-address_of_rs_word)));
+  uint8_t r = 0xF & (rs >> 4);
+
+  uint32_t value_of_result = UINT_MAX;
+  switch (r) {
+    case 0:
+      f->a0 = value_of_result;
+      break;
+    case 1:
+      f->a1 = value_of_result;
+      break;
+    case 2:
+      f->a2 = value_of_result;
+      break;
+    case 3:
+      f->a3 = value_of_result;
+      break;
+    case 4:
+      f->a4 = value_of_result;
+      break;
+    case 5:
+      f->a5 = value_of_result;
+      break;
+    case 6:
+      f->a6 = value_of_result;
+      break;
+    case 7:
+      f->a7 = value_of_result;
+      break;
+    case 8:
+      f->a8 = value_of_result;
+      break;
+    case 9:
+      f->a9 = value_of_result;
+      break;
+    case 10:
+      f->a10 = value_of_result;
+      break;
+    case 11:
+      f->a11 = value_of_result;
+      break;
+    case 12:
+      f->a12 = value_of_result;
+      break;
+    case 13:
+      f->a13 = value_of_result;
+      break;
+    case 14:
+      f->a14 = value_of_result;
+      break;
+    case 15:
+      f->a15 = value_of_result;
+      break;
+  }
+
+  // Move past this instruction
+  f->pc = f->pc+3;
+}
 
 #endif
