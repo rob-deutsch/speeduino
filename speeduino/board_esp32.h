@@ -60,7 +60,7 @@ extern SpeeduinoBTSerial Serial;
 ***********************************************************************************************************
 * Schedules
 */
-  
+
   #define FUEL1_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
   #define FUEL2_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
   #define FUEL3_COUNTER LEDC.timer_group[LEDC_HIGH_SPEED_MODE].timer[LEDC_TIMER_0].value.timer_cnt
@@ -91,12 +91,12 @@ extern SpeeduinoBTSerial Serial;
   #define FUEL3_TIMER_DISABLE()
   #define FUEL4_TIMER_DISABLE()
 
-  #define IGN1_TIMER_ENABLE()
+  #define IGN1_TIMER_ENABLE() LEDC.int_clr.duty_chng_end_hsch4 = 1; LEDC.int_ena.duty_chng_end_hsch4 = 1;
   #define IGN2_TIMER_ENABLE()
   #define IGN3_TIMER_ENABLE()
   #define IGN4_TIMER_ENABLE()
 
-  #define IGN1_TIMER_DISABLE()
+  #define IGN1_TIMER_DISABLE() LEDC.int_ena.duty_chng_end_hsch4 = 0;
   #define IGN2_TIMER_DISABLE()
   #define IGN3_TIMER_DISABLE()
   #define IGN4_TIMER_DISABLE()

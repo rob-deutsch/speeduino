@@ -4,6 +4,7 @@
 #include "esp_bt_device.h"
 #include <Ticker.h>
 #include <freertos/xtensa_api.h>
+#include "scheduler.h"
 
 extern void oneMSInterval();
 
@@ -29,6 +30,38 @@ int SpeeduinoBTSerial::availableForWrite(void)
 }
 #endif
 
+
+void IRAM_ATTR ledc_isr_handler(void* arg)
+{
+  Serial0.println("isr");
+  if (LEDC.int_st.duty_chng_end_hsch0) {
+    fuelSchedule1Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch1) {
+    fuelSchedule2Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch2) {
+    fuelSchedule3Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch3) {
+    fuelSchedule4Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch4) {
+    ignitionSchedule1Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch5) {
+    ignitionSchedule2Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch6) {
+    ignitionSchedule3Interrupt();
+  }
+  if (LEDC.int_st.duty_chng_end_hsch7) {
+    ignitionSchedule4Interrupt();
+  }
+  // Clear the highspeed interrupts
+  LEDC.int_clr.val = 0x0000FF00;
+}
+
 Ticker oneMSTimer;
 void h(XtExcFrame*);
 void initBoard()
@@ -39,6 +72,12 @@ void initBoard()
     Serial0.begin(115200);
     Serial0.println("Began diagnostics port");
     oneMSTimer.attach(0.001, oneMSInterval);
+
+  ledcAttachPin(19, 0); // assign a led pins to a channel
+  ledcSetup(0, 133, 8); // 12 kHz PWM, 8-bit resolution
+  ledcWrite(0, 128);
+
+  ledc_isr_register(ledc_isr_handler, NULL, ESP_INTR_FLAG_IRAM, NULL);
     /*
     ***********************************************************************************************************
     * General

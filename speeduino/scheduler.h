@@ -109,7 +109,7 @@ void setIgnitionSchedule8(void (*startCallback)(), unsigned long timeout, unsign
 inline void refreshIgnitionSchedule1(unsigned long timeToEnd) __attribute__((always_inline));
 
 //The ARM cores use seprate functions for their ISRs
-#if defined(ARDUINO_ARCH_STM32) || defined(CORE_TEENSY)
+#if defined(ARDUINO_ARCH_STM32) || defined(CORE_TEENSY) || defined(CORE_ESP32)
   static inline void fuelSchedule1Interrupt();
   static inline void fuelSchedule2Interrupt();
   static inline void fuelSchedule3Interrupt();
