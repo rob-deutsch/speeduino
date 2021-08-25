@@ -300,7 +300,7 @@ If it's the correct tooth, but the schedule is not yet started, calculate and an
 */
 #define MIN_CYCLES_FOR_ENDCOMPARE 6
 inline void refreshIgnitionTiming(int i, int16_t crankAngle, int ignitionEndAngle) {
-  if( (ignitionSchedule[i].Status == RUNNING) ) { setIgnitionCompare(i, getIgnitionCounter(i) + uS_TO_TIMER_COMPARE( fastDegreesToUS( ignitionLimits( (ignitionEndAngle - crankAngle) ) ) ) ); }
+  if( (ignitionSchedule[i].Status == SCH_RUNNING) ) { setIgnitionCompare(i, getIgnitionCounter(i) + uS_TO_TIMER_COMPARE( fastDegreesToUS( ignitionLimits( (ignitionEndAngle - crankAngle) ) ) ) ); }
   else if(currentStatus.startRevolutions > MIN_CYCLES_FOR_ENDCOMPARE) { ignitionSchedule[i].endCompare = getIgnitionCounter(i) + uS_TO_TIMER_COMPARE( fastDegreesToUS( ignitionLimits( (ignitionEndAngle - crankAngle) ) ) ); ignitionSchedule[i].endScheduleSetByDecoder = true; }
 }
 

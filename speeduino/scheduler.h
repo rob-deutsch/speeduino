@@ -142,17 +142,17 @@ inline void setIgnitionTimerRunning(int i, bool enabled);
 #endif
 #endif
 /** Schedule statuses.
- * - OFF - Schedule turned off and there is no scheduled plan
- * - PENDING - There's a scheduled plan, but is has not started to run yet
- * - STAGED - (???, Not used)
- * - RUNNING - Schedule is currently running
+ * - SCH_OFF - Schedule turned off and there is no scheduled plan
+ * - SCH_PENDING - There's a scheduled plan, but is has not started to run yet
+ * - SCH_STAGED - (???, Not used)
+ * - SCH_RUNNING - Schedule is currently running
  */
-enum ScheduleStatus {OFF, PENDING, STAGED, RUNNING}; //The statuses that a schedule can have
+enum ScheduleStatus {SCH_OFF, SCH_PENDING, SCH_STAGED, SCH_RUNNING}; //The statuses that a schedule can have
 /** Ignition schedule.
  */
 struct Schedule {
   volatile unsigned long duration;///< Scheduled duration (uS ?)
-  volatile ScheduleStatus Status; ///< Schedule status: OFF, PENDING, STAGED, RUNNING
+  volatile ScheduleStatus Status; ///< Schedule status: SCH_OFF, SCH_PENDING, SCH_STAGED, SCH_RUNNING
   volatile byte schedulesSet;     ///< A counter of how many times the schedule has been set
   void (*StartCallback)();        ///< Start Callback function for schedule
   void (*EndCallback)();          ///< End Callback function for schedule
@@ -160,9 +160,9 @@ struct Schedule {
   volatile COMPARE_TYPE startCompare; ///< The counter value of the timer when this will start
   volatile COMPARE_TYPE endCompare;   ///< The counter value of the timer when this will end
 
-  unsigned int nextStartCompare;      ///< Planned start of next schedule (when current schedule is RUNNING)
-  unsigned int nextEndCompare;        ///< Planned end of next schedule (when current schedule is RUNNING)
-  volatile bool hasNextSchedule = false; ///< Enable flag for planned next schedule (when current schedule is RUNNING)
+  unsigned int nextStartCompare;      ///< Planned start of next schedule (when current schedule is SCH_RUNNING)
+  unsigned int nextEndCompare;        ///< Planned end of next schedule (when current schedule is SCH_RUNNING)
+  volatile bool hasNextSchedule = false; ///< Enable flag for planned next schedule (when current schedule is SCH_RUNNING)
   volatile bool endScheduleSetByDecoder = false;
 };
 /** Fuel injection schedule.
@@ -171,7 +171,7 @@ struct Schedule {
 */
 struct FuelSchedule {
   volatile unsigned long duration;///< Scheduled duration (uS ?)
-  volatile ScheduleStatus Status; ///< Schedule status: OFF, PENDING, STAGED, RUNNING
+  volatile ScheduleStatus Status; ///< Schedule status: SCH_OFF, SCH_PENDING, SCH_STAGED, SCH_RUNNING
   volatile byte schedulesSet; ///< A counter of how many times the schedule has been set
   volatile COMPARE_TYPE startCompare; ///< The counter value of the timer when this will start
   volatile COMPARE_TYPE endCompare;   ///< The counter value of the timer when this will end
@@ -204,7 +204,7 @@ static inline unsigned int setQueue(volatile Schedule *queue[], Schedule *schedu
   unsigned int tmpQueue[4];
 
   //Set the initial queue state. This order matches the tmpQueue order
-  if(schedule1->Status == OFF)
+  if(schedule1->Status == SCH_OFF)
   {
     queue[0] = schedule2;
     queue[1] = schedule2;
@@ -219,7 +219,7 @@ static inline unsigned int setQueue(volatile Schedule *queue[], Schedule *schedu
     tmpQueue[1] = schedule1->endCompare - CNT;
   }
 
-  if(schedule2->Status == OFF)
+  if(schedule2->Status == SCH_OFF)
   {
     queue[2] = schedule1;
     queue[3] = schedule1;
@@ -262,7 +262,7 @@ static inline unsigned int popQueue(volatile Schedule *queue[])
   //queue[3] = &nullSchedule;
 
   unsigned int returnCompare;
-  if( queue[0]->Status == PENDING ) { returnCompare = queue[0]->startCompare; }
+  if( queue[0]->Status == SCH_PENDING ) { returnCompare = queue[0]->startCompare; }
   else { returnCompare = queue[0]->endCompare; }
 
   return returnCompare;

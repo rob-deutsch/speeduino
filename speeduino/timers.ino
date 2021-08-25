@@ -60,7 +60,7 @@ void oneMSInterval() //Most ARM chips can simply call a function
   //Check first whether each spark output is currently on. Only check it's dwell time if it is
 
   for (int i = 0; i < IGN_CHANNELS; i++) {
-    if(ignitionSchedule[i].Status == RUNNING) { if( (ignitionSchedule[i].startTime < targetOverdwellTime) && (configPage4.useDwellLim) && (isCrankLocked != true) ) { ignEndFunction[i](); ignitionSchedule[i].Status = OFF; } };
+    if(ignitionSchedule[i].Status == SCH_RUNNING) { if( (ignitionSchedule[i].startTime < targetOverdwellTime) && (configPage4.useDwellLim) && (isCrankLocked != true) ) { ignEndFunction[i](); ignitionSchedule[i].Status = SCH_OFF; } };
   }
 
   //Tacho output check
