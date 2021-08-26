@@ -99,7 +99,7 @@ inline void setIgnitionCompare(int i, COMPARE_TYPE val);
 inline void setIgnitionTimerRunning(int i, bool enabled);
 
 //The ARM cores use seprate functions for their ISRs
-#if defined(ARDUINO_ARCH_STM32) || defined(CORE_TEENSY)
+#if defined(ARDUINO_ARCH_STM32) || defined(CORE_TEENSY) || defined(CORE_ESP32)
   static inline void fuelSchedule1Interrupt();
   static inline void fuelSchedule2Interrupt();
   static inline void fuelSchedule3Interrupt();

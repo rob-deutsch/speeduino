@@ -7,7 +7,11 @@
  * Custom Programmable I/O.
  * The config related to Programmable I/O is found on configPage13 (of type @ref config13).
  */
+#if defined(CORE_ESP32)
+#include <pgmspace.h>
+#else
 #include <avr/pgmspace.h>
+#endif
 #include "globals.h"
 #include "utilities.h"
 #include "decoders.h"

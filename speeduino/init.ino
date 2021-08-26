@@ -76,6 +76,10 @@ void initialiseAll()
     configPage9.intcan_available = 1;   // device has internal canbus
     //STM32 can not currently enabled
     #endif
+
+    #if defined(CORE_ESP32)
+    EEPROM.begin(4096);
+    #endif
     
     loadConfig();
     doUpdates(); //Check if any data items need updating (Occurs with firmware updates)
@@ -260,13 +264,17 @@ void initialiseAll()
     #endif
 
     //Set the pin mappings
+    #if defined(CORE_ESP32)
+    setPinMapping(32);
+    #else
     if((configPage2.pinMapping == 255) || (configPage2.pinMapping == 0)) //255 = EEPROM value in a blank AVR; 0 = EEPROM value in new FRAM
     {
       //First time running on this board
       resetConfigPages(); 
-      setPinMapping(3); //Force board to v0.4
+        setPinMapping(3); //Force board to v0.4
     }
     else { setPinMapping(configPage2.pinMapping); }
+    #endif
 
     /* Note: This must come after the call to setPinMapping() or else pins 29 and 30 will become unusable as outputs.
      * Workaround for: https://github.com/tonton81/FlexCAN_T4/issues/14 */
@@ -458,7 +466,7 @@ void initialiseAll()
 
     if(configPage2.strokes == FOUR_STROKE) { CRANK_ANGLE_MAX_INJ = 720 / currentStatus.nSquirts; }
     else { CRANK_ANGLE_MAX_INJ = 360 / currentStatus.nSquirts; }
-
+    
     switch (configPage2.nCylinders) {
     case 1:
         channel1IgnDegrees = 0;
@@ -1861,6 +1869,47 @@ void setPinMapping(byte boardID)
       pinResetControl = PB7; //Reset control output
       pinVSS = PB6; //VSS input pin
      #endif
+      break;
+
+    case 32:
+      //Pin mappings for the esp32doit-devkit-v1
+      // pinInjector1 = 0; //Output pin injector 1 is on
+      // pinInjector2 = 9; //Output pin injector 2 is on
+      // pinInjector3 = 10; //Output pin injector 3 is on
+      // pinInjector4 = 11; //Output pin injector 4 is on
+      pinCoil1 = 12; //Pin for coil 1
+      pinCoil2 = 13; //Pin for coil 2
+      pinCoil3 = 14; //Pin for coil 3
+      pinCoil4 = 15; //Pin for coil 4
+      pinTrigger = 32; //The CAS pin
+      pinTrigger2 = 34; //The Cam Sensor pin
+      pinTrigger3 = 35; //The Cam sensor 2 pin
+      // pinTPS = 36;//TPS input pin
+      // pinMAP = 36; //MAP sensor pin
+      // pinIAT = 36; //IAT sensor pin
+      // pinCLT = 36; //CLS sensor pin
+      // pinO2 = 36; //O2 Sensor pin
+      // pinBat = 36; //Battery reference voltage pin
+      // pinDisplayReset = 48; // OLED reset pin
+      // pinTachOut = 49; //Tacho output pin  (Goes to ULN2803)
+      // pinIdle1 = 5; //Single wire idle control
+      // pinIdle2 = 0; //2 wire idle control
+      // pinBoost = 0; //Boost control
+      // pinVVT_1 = 4; //Default VVT output
+      // pinVVT_2 = 48; //Default VVT2 output
+      // pinFuelPump = 45; //Fuel pump output  (Goes to ULN2803)
+      // pinStepperDir = 16; //Direction pin  for DRV8825 driver
+      // pinStepperStep = 17; //Step pin for DRV8825 driver
+      // pinStepperEnable = 24; //Enable pin for DRV8825
+      // pinFan = 47; //Pin for the fan output (Goes to ULN2803)
+      // pinLaunch = 51; //Can be overwritten below
+      // pinFlex = 2; // Flex sensor (Must be external interrupt enabled)
+      // pinResetControl = 43; //Reset control output
+      // pinBaro = 36;
+      // pinVSS = 20;
+      // pinWMIEmpty = 46;
+      // pinWMIIndicator = 44;
+      // pinWMIEnabled = 42;
       break;
 
     case 40:

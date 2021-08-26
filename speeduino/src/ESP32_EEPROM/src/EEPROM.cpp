@@ -183,6 +183,10 @@ void EEPROMClass::write(int address, uint8_t value) {
   }
 }
 
+void EEPROMClass::update(int address, uint8_t value) {
+  write(address, value);
+}
+
 bool EEPROMClass::commit() {
   bool ret = false;
   if (!_size) {

@@ -18,6 +18,9 @@ A full copy of the license may be found in the projects root directory
 #include "pages.h"
 #include "page_crc.h"
 #include "table_iterator.h"
+#if defined(CORE_ESP32)
+#include <EEPROM.h>
+#endif
 #ifdef RTC_ENABLED
   #include "rtc_common.h"
 #endif
@@ -72,6 +75,10 @@ void command()
 
     case 'B': // Burn current values to eeprom
       writeAllConfig();
+      #if defined(CORE_ESP32)
+      // TODO: Find a better solution
+      EEPROM.commit();
+      #endif
       break;
 
     case 'b': // New EEPROM burn command to only burn a single page at a time
@@ -81,6 +88,10 @@ void command()
       {
         Serial.read(); //Ignore the first table value, it's always 0
         writeConfig(Serial.read());
+        #if defined(CORE_ESP32)
+        // TODO: Find a better solution
+        EEPROM.commit();
+        #endif
         cmdPending = false;
       }
       break;
