@@ -27,6 +27,7 @@ A full copy of the license may be found in the projects root directory
 #include "globals.h"
 #include "scheduler.h"
 #include "scheduledIO.h"
+#include <driver/timer.h>
 
 FuelSchedule fuelSchedule1;
 FuelSchedule fuelSchedule2;
@@ -479,77 +480,43 @@ void setIgnitionSchedule(int i, void (*startCallback)(), unsigned long timeout, 
 }
 
 inline COMPARE_TYPE getIgnitionCounter(int i) {
-  if (i == 0) { return IGN1_COUNTER; }
+  COMPARE_TYPE val;
+  if (i == 0) { val = timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &val); }
   #if IGN_CHANNELS >= 2
-    else if (i == 1 ) { return IGN2_COUNTER; }
+    else if (i == 1 ) { val = timer_get_counter_value(TIMER_GROUP_0, TIMER_1, &val); }
   #endif
   #if IGN_CHANNELS >= 3
-    else if (i == 2 ) { return IGN3_COUNTER; }
+    else if (i == 2 ) { val = timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &val); }
   #endif
   #if IGN_CHANNELS >= 4
-    else if (i == 3 ) { return IGN4_COUNTER; }
+    else if (i == 3 ) { val = timer_get_counter_value(TIMER_GROUP_1, TIMER_1, &val); }
   #endif
-  #if IGN_CHANNELS >= 5
-    else if (i == 4 ) { return IGN5_COUNTER; }
-  #endif
-  #if IGN_CHANNELS >= 6
-    else if (i == 5 ) { return IGN6_COUNTER; }
-  #endif
-  #if IGN_CHANNELS >= 7
-    else if (i == 6 ) { return IGN7_COUNTER; }
-  #endif
-  #if IGN_CHANNELS >= 8
-    else if (i == 7 ) { return IGN8_COUNTER; }
-  #endif
+  return val;
 }
 
 inline void setIgnitionCompare(int i, COMPARE_TYPE val) {
-  if (i == 0) { IGN1_COMPARE = (uint16_t) val; }
+  if (i == 0) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_0, val); }
   #if IGN_CHANNELS >= 2
-    else if (i == 1 ) { IGN2_COMPARE = (uint16_t) val; }
+    else if (i == 1 ) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_1, val); }
   #endif
   #if IGN_CHANNELS >= 3
-    else if (i == 2 ) { IGN3_COMPARE = (uint16_t) val; }
+    else if (i == 2 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_0, val); }
   #endif
   #if IGN_CHANNELS >= 4
-    else if (i == 3 ) { IGN4_COMPARE = (uint16_t) val; }
-  #endif
-  #if IGN_CHANNELS >= 5
-    else if (i == 4 ) { IGN5_COMPARE = (uint16_t) val; }
-  #endif
-  #if IGN_CHANNELS >= 6
-    else if (i == 5 ) { IGN6_COMPARE = (uint16_t) val; }
-  #endif
-  #if IGN_CHANNELS >= 7
-    else if (i == 6 ) { IGN7_COMPARE = (uint16_t) val; }
-  #endif
-  #if IGN_CHANNELS >= 8
-    else if (i == 7 ) { IGN8_COMPARE = (uint16_t) val; }
+    else if (i == 3 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, val); }
   #endif
 }
 
 inline void setIgnitionTimerRunning(int i, bool enabled) {
-  if (i == 0) { if (enabled) { IGN1_TIMER_ENABLE(); } else { IGN1_TIMER_ENABLE(); }}
+  if (i == 0) { timer_set_alarm(TIMER_GROUP_0, TIMER_0, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
   #if IGN_CHANNELS >= 2
-    else if (i == 1) { if (enabled) { IGN2_TIMER_ENABLE(); } else { IGN2_TIMER_ENABLE(); }}
+    else if (i == 1 ) { timer_set_alarm(TIMER_GROUP_0, TIMER_1, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
   #endif
   #if IGN_CHANNELS >= 3
-    else if (i == 2) { if (enabled) { IGN3_TIMER_ENABLE(); } else { IGN3_TIMER_ENABLE(); }}
+    else if (i == 2 ) { timer_set_alarm(TIMER_GROUP_1, TIMER_0, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
   #endif
   #if IGN_CHANNELS >= 4
-    else if (i == 3) { if (enabled) { IGN4_TIMER_ENABLE(); } else { IGN4_TIMER_ENABLE(); }}
-  #endif
-  #if IGN_CHANNELS >= 5
-    else if (i == 4) { if (enabled) { IGN5_TIMER_ENABLE(); } else { IGN5_TIMER_ENABLE(); }}
-  #endif
-  #if IGN_CHANNELS >= 6
-    else if (i == 5) { if (enabled) { IGN6_TIMER_ENABLE(); } else { IGN6_TIMER_ENABLE(); }}
-  #endif
-  #if IGN_CHANNELS >= 7
-    else if (i == 6) { if (enabled) { IGN7_TIMER_ENABLE(); } else { IGN7_TIMER_ENABLE(); }}
-  #endif
-  #if IGN_CHANNELS >= 8
-    else if (i == 7) { if (enabled) { IGN8_TIMER_ENABLE(); } else { IGN8_TIMER_ENABLE(); }}
+    else if (i == 3 ) { timer_set_alarm(TIMER_GROUP_1, TIMER_1, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
   #endif
 }
 

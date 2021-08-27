@@ -34,7 +34,7 @@ extern SpeeduinoBTSerial Serial;
   void doSystemReset();
   void jumpToBootloader();
 
-  #define COMPARE_TYPE uint32_t
+  #define COMPARE_TYPE uint64_t
   #define pinIsReserved(pin)  ( (((pin) >= 1) && ((pin) <= 3)) || (((pin) >= 6) && (pin <=12)) ) //Forbiden pins like USB
 
   #if !defined (A0)
@@ -102,8 +102,8 @@ extern SpeeduinoBTSerial Serial;
   #define IGN4_TIMER_DISABLE()
 
   
-  #define MAX_TIMER_PERIOD 139808 //This is the maximum time, in uS, that the compare channels can run before overflowing. It is typically 65535 * <how long each tick represents>
-  #define uS_TO_TIMER_COMPARE(uS) ((uS * 15) >> 5) //Converts a given number of uS into the required number of timer ticks until that time has passed.
+  #define MAX_TIMER_PERIOD 0xFFFFFFFFFFFFFFFF //This is the maximum time, in uS, that the compare channels can run before overflowing. It is typically 65535 * <how long each tick represents>
+  #define uS_TO_TIMER_COMPARE(uS) (uS) //Converts a given number of uS into the required number of timer ticks until that time has passed.
 
 /*
 ***********************************************************************************************************
