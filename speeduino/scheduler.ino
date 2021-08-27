@@ -481,15 +481,15 @@ void setIgnitionSchedule(int i, void (*startCallback)(), unsigned long timeout, 
 
 inline COMPARE_TYPE getIgnitionCounter(int i) {
   COMPARE_TYPE val;
-  if (i == 0) { val = timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &val); }
+  if (i == 0) { timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &val); }
   #if IGN_CHANNELS >= 2
-    else if (i == 1 ) { val = timer_get_counter_value(TIMER_GROUP_0, TIMER_1, &val); }
+    else if (i == 1 ) { timer_get_counter_value(TIMER_GROUP_0, TIMER_1, &val); }
   #endif
   #if IGN_CHANNELS >= 3
-    else if (i == 2 ) { val = timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &val); }
+    else if (i == 2 ) { timer_get_counter_value(TIMER_GROUP_1, TIMER_0, &val); }
   #endif
   #if IGN_CHANNELS >= 4
-    else if (i == 3 ) { val = timer_get_counter_value(TIMER_GROUP_1, TIMER_1, &val); }
+    else if (i == 3 ) { timer_get_counter_value(TIMER_GROUP_1, TIMER_1, &val); }
   #endif
   return val;
 }

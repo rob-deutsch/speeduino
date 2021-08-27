@@ -31,11 +31,33 @@ int SpeeduinoBTSerial::availableForWrite(void)
 }
 #endif
 
+
+void timerISR0(void *ptr) {
+  TIMERG0.int_clr_timers.t0 = 1;
+  ignitionSchedule1Interrupt();
+}
+void timerISR1(void *ptr) {
+TIMERG0.int_clr_timers.t1 = 1;
+  ignitionSchedule2Interrupt();
+}
+void timerISR2(void *ptr) {
+  TIMERG1.int_clr_timers.t0 = 1;
+  ignitionSchedule3Interrupt();
+}
+void timerISR3(void *ptr) {
+  TIMERG1.int_clr_timers.t1 = 1;
+  ignitionSchedule4Interrupt();
+}
+
 Ticker oneMSTimer;
 void h(XtExcFrame*);
 void initBoard()
 {
     xt_set_exception_handler(EXCCAUSE_DIVIDE_BY_ZERO, h);
+
+    ledcAttachPin(19, 0); // assign a led pins to a channel
+    ledcSetup(0, 66, 8); // 12 kHz PWM, 8-bit resolution
+    ledcWrite(0, 128);
 
     // Useful for diagnostics
     Serial0.begin(115200);
@@ -53,6 +75,10 @@ void initBoard()
     timer_init(TIMER_GROUP_0, TIMER_1, &config);
     timer_init(TIMER_GROUP_1, TIMER_0, &config);
     timer_init(TIMER_GROUP_1, TIMER_1, &config);
+    timer_isr_register(TIMER_GROUP_0, TIMER_0, timerISR0, NULL, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_0, TIMER_1, timerISR1, NULL, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_0, timerISR2, NULL, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_1, timerISR3, NULL, NULL, NULL);
 
     /*
     ***********************************************************************************************************
