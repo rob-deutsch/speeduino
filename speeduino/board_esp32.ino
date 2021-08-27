@@ -31,28 +31,30 @@ int SpeeduinoBTSerial::availableForWrite(void)
 }
 #endif
 
+// bool p = false;
 
-void timerISR0(void *ptr) {
-  TIMERG0.int_clr_timers.t0 = 1;
-  ignitionSchedule1Interrupt();
-}
-void timerISR1(void *ptr) {
-TIMERG0.int_clr_timers.t1 = 1;
-  ignitionSchedule2Interrupt();
-}
-void timerISR2(void *ptr) {
-  TIMERG1.int_clr_timers.t0 = 1;
-  ignitionSchedule3Interrupt();
-}
-void timerISR3(void *ptr) {
-  TIMERG1.int_clr_timers.t1 = 1;
-  ignitionSchedule4Interrupt();
+void timerISR(void *ptr) {
+  // p = !p;
+  // digitalWrite(23, p);
+  switch ((uint32_t)ptr) {
+    case 0:
+    TIMERG0.int_clr_timers.t0 = 1;
+    case 1:
+    TIMERG0.int_clr_timers.t1 = 1;
+    case 2:
+    TIMERG1.int_clr_timers.t0 = 1;
+    case 3:
+    TIMERG1.int_clr_timers.t1 = 1;
+  }
+  
+  ignitionScheduleInterrupt((uint32_t)ptr);
 }
 
 Ticker oneMSTimer;
 void h(XtExcFrame*);
 void initBoard()
 {
+    // pinMode(23, OUTPUT);
     xt_set_exception_handler(EXCCAUSE_DIVIDE_BY_ZERO, h);
 
     ledcAttachPin(19, 0); // assign a led pins to a channel
@@ -75,10 +77,10 @@ void initBoard()
     timer_init(TIMER_GROUP_0, TIMER_1, &config);
     timer_init(TIMER_GROUP_1, TIMER_0, &config);
     timer_init(TIMER_GROUP_1, TIMER_1, &config);
-    timer_isr_register(TIMER_GROUP_0, TIMER_0, timerISR0, NULL, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_0, TIMER_1, timerISR1, NULL, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_1, TIMER_0, timerISR2, NULL, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_1, TIMER_1, timerISR3, NULL, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_0, TIMER_0, timerISR, (void*)(uint32_t)0, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_0, TIMER_1, timerISR, (void*)(uint32_t)1, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_0, timerISR, (void*)(uint32_t)2, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_1, timerISR, (void*)(uint32_t)3, NULL, NULL);
 
     /*
     ***********************************************************************************************************

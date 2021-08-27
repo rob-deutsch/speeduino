@@ -217,7 +217,7 @@ void loop()
 
     //***Perform sensor reads***
     //-----------------------------------------------------------------------------------------------------
-    readMAP();
+    // readMAP();
     
     if (BIT_CHECK(LOOP_TIMER, BIT_TIMER_15HZ)) //Every 32 loops
     {
