@@ -33,18 +33,22 @@ int SpeeduinoBTSerial::availableForWrite(void)
 
 // bool p = false;
 
-void timerISR(void *ptr) {
+void IRAM_ATTR timerISR(void *ptr) {
   // p = !p;
   // digitalWrite(23, p);
   switch ((uint32_t)ptr) {
     case 0:
     TIMERG0.int_clr_timers.t0 = 1;
+    // timer_set_alarm(TIMER_GROUP_0, TIMER_0, TIMER_ALARM_EN);
     case 1:
     TIMERG0.int_clr_timers.t1 = 1;
+    // timer_set_alarm(TIMER_GROUP_0, TIMER_1, TIMER_ALARM_EN);
     case 2:
     TIMERG1.int_clr_timers.t0 = 1;
+    // timer_set_alarm(TIMER_GROUP_1, TIMER_0, TIMER_ALARM_EN);
     case 3:
     TIMERG1.int_clr_timers.t1 = 1;
+    // timer_set_alarm(TIMER_GROUP_1, TIMER_1, TIMER_ALARM_EN);
   }
   
   ignitionScheduleInterrupt((uint32_t)ptr);
@@ -77,10 +81,10 @@ void initBoard()
     timer_init(TIMER_GROUP_0, TIMER_1, &config);
     timer_init(TIMER_GROUP_1, TIMER_0, &config);
     timer_init(TIMER_GROUP_1, TIMER_1, &config);
-    timer_isr_register(TIMER_GROUP_0, TIMER_0, timerISR, (void*)(uint32_t)0, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_0, TIMER_1, timerISR, (void*)(uint32_t)1, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_1, TIMER_0, timerISR, (void*)(uint32_t)2, NULL, NULL);
-    timer_isr_register(TIMER_GROUP_1, TIMER_1, timerISR, (void*)(uint32_t)3, NULL, NULL);
+    timer_isr_register(TIMER_GROUP_0, TIMER_0, timerISR, (void*)(uint32_t)0, 0, NULL);
+    timer_isr_register(TIMER_GROUP_0, TIMER_1, timerISR, (void*)(uint32_t)1, 0, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_0, timerISR, (void*)(uint32_t)2, 0, NULL);
+    timer_isr_register(TIMER_GROUP_1, TIMER_1, timerISR, (void*)(uint32_t)3, 0, NULL);
 
     /*
     ***********************************************************************************************************

@@ -116,6 +116,7 @@ inline void setIgnitionTimerRunning(int i, bool enabled);
 #if (INJ_CHANNELS >= 8)
   static inline void fuelSchedule8Interrupt();
 #endif
+inline void ignitionScheduleInterrupt(int i);
 #if (IGN_CHANNELS >= 1)
   static inline void ignitionSchedule1Interrupt();
 #endif

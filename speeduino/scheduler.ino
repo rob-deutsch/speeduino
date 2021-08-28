@@ -441,7 +441,7 @@ void setFuelSchedule8(unsigned long timeout, unsigned long duration) //Uses time
 }
 #endif
 
-void setIgnitionSchedule(int i, void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
+void IRAM_ATTR setIgnitionSchedule(int i, void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
 {
   Schedule *thisIgnitionSchedule = &(ignitionSchedule[i]);
   if(thisIgnitionSchedule->Status != SCH_RUNNING) //Check that we're not already part way through a schedule
@@ -477,9 +477,10 @@ void setIgnitionSchedule(int i, void (*startCallback)(), unsigned long timeout, 
     }
 
   }
+  interrupts();
 }
 
-inline COMPARE_TYPE getIgnitionCounter(int i) {
+inline COMPARE_TYPE IRAM_ATTR getIgnitionCounter(int i) {
   COMPARE_TYPE val;
   if (i == 0) { timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &val); }
   #if IGN_CHANNELS >= 2
@@ -494,20 +495,20 @@ inline COMPARE_TYPE getIgnitionCounter(int i) {
   return val;
 }
 
-inline void setIgnitionCompare(int i, COMPARE_TYPE val) {
-  if (i == 0) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_0, val); }
+inline void IRAM_ATTR setIgnitionCompare(int i, COMPARE_TYPE val) {
+  if (i == 0) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_0, val); timer_set_alarm(TIMER_GROUP_0, TIMER_0, TIMER_ALARM_EN); }
   #if IGN_CHANNELS >= 2
-    else if (i == 1 ) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_1, val); }
+    else if (i == 1 ) { timer_set_alarm_value(TIMER_GROUP_0, TIMER_1, val); timer_set_alarm(TIMER_GROUP_0, TIMER_1, TIMER_ALARM_EN); }
   #endif
   #if IGN_CHANNELS >= 3
-    else if (i == 2 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_0, val); }
+    else if (i == 2 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_0, val); timer_set_alarm(TIMER_GROUP_1, TIMER_0, TIMER_ALARM_EN); }
   #endif
   #if IGN_CHANNELS >= 4
-    else if (i == 3 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, val); }
+    else if (i == 3 ) { timer_set_alarm_value(TIMER_GROUP_1, TIMER_1, val); timer_set_alarm(TIMER_GROUP_1, TIMER_1, TIMER_ALARM_EN); }
   #endif
 }
 
-inline void setIgnitionTimerRunning(int i, bool enabled) {
+inline void IRAM_ATTR setIgnitionTimerRunning(int i, bool enabled) {
   if (i == 0) { timer_set_alarm(TIMER_GROUP_0, TIMER_0, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
   #if IGN_CHANNELS >= 2
     else if (i == 1 ) { timer_set_alarm(TIMER_GROUP_0, TIMER_1, enabled ? TIMER_ALARM_EN : TIMER_ALARM_DIS); }
@@ -521,12 +522,12 @@ inline void setIgnitionTimerRunning(int i, bool enabled) {
 }
 
 //Ignition schedulers use Timer 5
-void setIgnitionSchedule1(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
+void IRAM_ATTR setIgnitionSchedule1(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
 {
   setIgnitionSchedule(0, startCallback, timeout, duration, endCallback);
 }
 
-inline void refreshIgnitionSchedule1(unsigned long timeToEnd)
+inline void IRAM_ATTR refreshIgnitionSchedule1(unsigned long timeToEnd)
 {
   if( (ignitionSchedule[0].Status == SCH_RUNNING) && (timeToEnd < ignitionSchedule[0].duration) )
   //Must have the threshold check here otherwise it can cause a condition where the compare fires twice, once after the other, both for the end
@@ -539,15 +540,15 @@ inline void refreshIgnitionSchedule1(unsigned long timeToEnd)
   }
 }
 
-void setIgnitionSchedule2(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
+void IRAM_ATTR setIgnitionSchedule2(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
 {
   setIgnitionSchedule(1, startCallback, timeout, duration, endCallback);
 }
-void setIgnitionSchedule3(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
+void IRAM_ATTR setIgnitionSchedule3(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
 {
   setIgnitionSchedule(2, startCallback, timeout, duration, endCallback);
 }
-void setIgnitionSchedule4(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
+void IRAM_ATTR setIgnitionSchedule4(void (*startCallback)(), unsigned long timeout, unsigned long duration, void(*endCallback)())
 {
   setIgnitionSchedule(3, startCallback, timeout, duration, endCallback);
 }
@@ -890,7 +891,8 @@ static inline void fuelSchedule8Interrupt() //Most ARM chips can simply call a f
 }
 #endif
 
-inline void ignitionScheduleInterrupt(int i) {
+inline void IRAM_ATTR ignitionScheduleInterrupt(int i) {
+  noInterrupts();
   Schedule *thisIgnitionSchedule = &(ignitionSchedule[i]);
   if (thisIgnitionSchedule->Status == SCH_PENDING) //Check to see if this schedule is turn on
   {
@@ -929,7 +931,7 @@ inline void ignitionScheduleInterrupt(int i) {
 #if defined(CORE_AVR) //AVR chips use the ISR for this
 ISR(TIMER5_COMPA_vect) //ignitionSchedule1
 #else
-static inline void ignitionSchedule1Interrupt() //Most ARM chips can simply call a function
+static inline void IRAM_ATTR ignitionSchedule1Interrupt() //Most ARM chips can simply call a function
 #endif
   {
     ignitionScheduleInterrupt(0);
@@ -940,7 +942,7 @@ static inline void ignitionSchedule1Interrupt() //Most ARM chips can simply call
 #if defined(CORE_AVR) //AVR chips use the ISR for this
 ISR(TIMER5_COMPB_vect) //ignitionSchedule2
 #else
-static inline void ignitionSchedule2Interrupt() //Most ARM chips can simply call a function
+static inline void IRAM_ATTR ignitionSchedule2Interrupt() //Most ARM chips can simply call a function
 #endif
   {
     ignitionScheduleInterrupt(1);
@@ -951,7 +953,7 @@ static inline void ignitionSchedule2Interrupt() //Most ARM chips can simply call
 #if defined(CORE_AVR) //AVR chips use the ISR for this
 ISR(TIMER5_COMPC_vect) //ignitionSchedule3
 #else
-static inline void ignitionSchedule3Interrupt() //Most ARM chips can simply call a function
+static inline void IRAM_ATTR ignitionSchedule3Interrupt() //Most ARM chips can simply call a function
 #endif
   {
     ignitionScheduleInterrupt(2);
@@ -962,7 +964,7 @@ static inline void ignitionSchedule3Interrupt() //Most ARM chips can simply call
 #if defined(CORE_AVR) //AVR chips use the ISR for this
 ISR(TIMER4_COMPA_vect) //ignitionSchedule4
 #else
-static inline void ignitionSchedule4Interrupt() //Most ARM chips can simply call a function
+static inline void IRAM_ATTR ignitionSchedule4Interrupt() //Most ARM chips can simply call a function
 #endif
   {
     ignitionScheduleInterrupt(3);
