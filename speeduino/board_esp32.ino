@@ -58,7 +58,7 @@ Ticker oneMSTimer;
 void h(XtExcFrame*);
 void initBoard()
 {
-    // pinMode(23, OUTPUT);
+    pinMode(23, OUTPUT);
     xt_set_exception_handler(EXCCAUSE_DIVIDE_BY_ZERO, h);
 
     ledcAttachPin(19, 0); // assign a led pins to a channel

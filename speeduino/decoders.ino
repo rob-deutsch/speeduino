@@ -919,9 +919,11 @@ void triggerSetup_BasicDistributor()
   else { MAX_STALL_TIME = (3200UL * triggerToothAngle); } //Minimum 50rpm. (3200uS is the time per degree at 50rpm).
 
 }
-
+bool p = false;
 void triggerPri_BasicDistributor()
 {
+  p = !p;
+  digitalWrite(23, p);
   curTime = micros();
   curGap = curTime - toothLastToothTime;
   if ( (curGap >= triggerFilterTime) )
