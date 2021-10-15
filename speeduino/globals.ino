@@ -110,15 +110,6 @@ bool channel6InjEnabled = false;
 bool channel7InjEnabled = false;
 bool channel8InjEnabled = false;
 
-int ignition1EndAngle = 0;
-int ignition2EndAngle = 0;
-int ignition3EndAngle = 0;
-int ignition4EndAngle = 0;
-int ignition5EndAngle = 0;
-int ignition6EndAngle = 0;
-int ignition7EndAngle = 0;
-int ignition8EndAngle = 0;
-
 //These are variables used across multiple files
 /// int (member) indexes in fullStatus array
 const byte PROGMEM fsIntIndex[] = {4, 14, 17, 25, 27, 32, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 75, 77, 79, 81, 85, 87, 89, 93, 97, 102, 190 };
